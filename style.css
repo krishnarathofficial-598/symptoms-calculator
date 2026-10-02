@@ -1,0 +1,258 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+}
+
+body {
+    background: #0c0b0b;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.liquid-loader {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+    padding: 20px;
+}
+
+.loader-track {
+    position: relative;
+    width: 180px;
+    height: 32px;
+    background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow:
+        inset 0 2px 4px rgba(0, 0, 0, 0.6),
+        0 1px 3px rgba(255, 255, 255, 0.1);
+}
+
+.liquid-fill {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    height: calc(100% - 4px);
+    background: linear-gradient(90deg, #4f46e5, #7c3aed, #ec4899, #f59e0b);
+    border-radius: 14px;
+    animation:
+        fillProgress 4s ease-out infinite,
+        colorShift 3s linear infinite;
+    box-shadow:
+        0 0 12px rgba(124, 58, 237, 0.4),
+        inset 0 1px 2px rgba(255, 255, 255, 0.2);
+}
+
+.loading-text {
+    color: rgb(159, 66, 66);
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    animation: textGlow 1s ease-in-out infinite;
+}
+
+.dot {
+    margin-left: 3px;
+    animation: blink 1.5s infinite;
+}
+
+.dot:nth-of-type(1) {
+    animation-delay: 0s;
+}
+.dot:nth-of-type(2) {
+    animation-delay: 0.3s;
+}
+.dot:nth-of-type(3) {
+    animation-delay: 0.6s;
+}
+
+@keyframes fillProgress {
+    0% {
+        width: 4px;
+    }
+    25% {
+        width: 25%;
+    }
+    50%{
+        width: 50%;
+    }
+    75%{
+        width: 75%;
+    }
+    100%{
+        width: calc(100% - 4px);
+    }
+}
+
+@keyframes colorShift{
+    0%{
+        filter: hue-rotate(0deg) brightness(1);
+    }
+    30%{
+        filter: hue-rotate(120deg) brightness(1.1);
+    }
+    66%{
+        filter: hue-rotate(240deg) brightness(0.9);
+    }
+    100%{
+        filter: hue-rotate(360deg) brightness(1);
+    }
+}
+
+@keyframes textGlow{
+    0%, 100%{
+        opacity: 0.5;
+        text-shadow: 0 0 8px rgba(139, 92, 246, 0.3);
+    }
+    50%{
+        opacity: 1;
+        text-shadow: 0 0 16px rgba(139, 92, 246, 0.6);
+    }
+}
+
+@keyframes blink{
+    0%, 50%{
+        opacity: 1;
+    }
+    51%, 100%{
+        opacity: 0;
+    }
+}
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+}
+
+body{
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: url('high-resolution-nature-landscape-l.jpg');
+    background-size: cover;
+    background-position: center;
+}
+
+.login-form{
+    background: rgba(64, 64, 64, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 30px;
+    border-radius: 16px;
+    backdrop-filter: blur(25px);
+    text-align: center;
+    color: rgb(117, 58, 58);
+    width: 400px;
+    box-shadow: 0 0 20px 10px rgba(0, 0, 0, 0.15);
+}
+
+.login-title{
+    font-size: 40px;
+    margin-bottom: 40px;
+}
+
+.input-box{
+    margin: 20px 0;
+    position: relative;
+}
+
+.input-box input{
+    width: 100%;
+    background: rgba(255, 255, 255, 0.3);
+    border: none;
+    padding: 12px 12px 12px 45px;
+    border-radius: 99px;
+    outline: 3px solid transparent;
+    transition: 0.3s;
+    font-size: 17px;
+    color: rgb(181, 153, 101);
+    font-weight: 600;
+}
+
+.input-box input::placeholder{
+    color: rgba(152, 73, 73, 0.8);
+    font-size: 17px;
+    font-weight: 500;
+}
+
+.input-box input:focus{
+    outline: 3px solid rgba(255, 255, 255, 0.3);
+}
+
+.input-box input::-ms-reveal{
+    filter: invert(100%);
+}
+
+.input-box i{
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 20px;
+    color: rgba(163, 68, 68, 0.8);
+}
+
+.remember-forgot-box{
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0;
+    font-size: 15px;
+}
+
+.remember-forgot-box label{
+    display: flex;
+    gap: 8px;
+    cursor: pointer;
+}
+
+.remember-forgot-box input{
+    accent-color: rgb(23, 3, 3);
+    cursor: pointer;
+}
+
+.remember-forgot-box a{
+    color: rgb(21, 3, 3);
+    text-decoration: none;
+}
+
+.remember-forgot-box a:hover{
+    text-decoration: underline;
+}
+
+.login-btn{
+    width: 100%;
+    padding: 10px 0;
+    background: #2f9cf4;
+    border: none;
+    border-radius: 99px;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.login-btn:hover{
+    background: #0b87ec;
+}
+
+.register{
+    margin-top: 15px;
+    font-size: 15px;
+}
+
+.register a{
+    color: rgb(21, 5, 5);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.register a:hover{
+    text-decoration: underline;
+}

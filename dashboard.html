@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Dashboard</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Poppins,sans-serif;
+scroll-behavior:smooth;
+}
+
+
+/* BACKGROUND */
+
+body{
+
+background:white;
+color:#0f172a;
+overflow-x:hidden;
+
+}
+
+
+/* PARTICLES */
+
+canvas{
+
+position:fixed;
+top:0;
+left:0;
+z-index:-1;
+
+}
+
+
+/* NAVBAR */
+
+.navbar{
+
+position:fixed;
+top:0;
+width:100%;
+
+display:flex;
+justify-content:space-between;
+align-items:center;
+
+padding:15px 40px;
+
+background:#020617;
+
+box-shadow:
+0 0 10px #00aaff,
+0 0 25px #007bff;
+
+z-index:1000;
+
+}
+
+
+.logo{
+
+color:white;
+font-weight:600;
+font-size:20px;
+
+text-shadow:
+0 0 10px #00c3ff,
+0 0 20px #007bff;
+
+}
+
+
+.nav-links a{
+
+margin-left:20px;
+text-decoration:none;
+color:white;
+
+position:relative;
+
+}
+
+
+.nav-links a::after{
+
+content:'';
+position:absolute;
+left:0;
+bottom:-5px;
+width:0%;
+height:2px;
+
+background:#00c3ff;
+
+transition:0.3s;
+
+}
+
+
+.nav-links a:hover::after{
+
+width:100%;
+
+}
+
+
+
+/* MAIN */
+
+.main{
+
+height:100vh;
+
+display:flex;
+justify-content:center;
+align-items:center;
+
+}
+
+
+/* CARD */
+
+.dashboard-container{
+
+width:400px;
+padding:45px;
+
+background:rgba(255,255,255,0.6);
+
+border-radius:18px;
+
+backdrop-filter: blur(15px);
+
+border:1px solid rgba(0,170,255,0.3);
+
+box-shadow:
+
+0 10px 30px rgba(0,120,255,0.2);
+
+text-align:center;
+
+animation:fadeUp 1s ease;
+
+}
+
+
+/* TEXT */
+
+h1{
+
+margin-bottom:10px;
+
+color:#020617;
+
+}
+
+
+p{
+
+margin-bottom:25px;
+opacity:0.7;
+
+}
+
+
+
+/* BUTTON */
+
+.logout-btn{
+
+padding:12px 30px;
+
+border:none;
+border-radius:8px;
+
+font-size:15px;
+
+color:white;
+
+background:#007bff;
+
+box-shadow:
+
+0 0 12px #007bff;
+
+cursor:pointer;
+
+transition:0.3s;
+
+}
+
+
+.logout-btn:hover{
+
+transform:translateY(-3px);
+
+box-shadow:
+
+0 0 20px #007bff,
+0 0 40px #00c3ff;
+
+}
+
+
+
+/* FLOATING GRAPHICS */
+
+.shape{
+
+position:absolute;
+border-radius:50%;
+opacity:0.4;
+filter:blur(35px);
+
+animation:float 6s infinite ease-in-out;
+
+}
+
+
+.s1{
+
+width:160px;
+height:160px;
+
+background:#00aaff;
+
+top:20%;
+left:10%;
+
+}
+
+
+.s2{
+
+width:140px;
+height:140px;
+
+background:#007bff;
+
+bottom:15%;
+right:15%;
+
+animation-delay:2s;
+
+}
+
+
+@keyframes float{
+
+0%{transform:translateY(0)}
+50%{transform:translateY(-35px)}
+100%{transform:translateY(0)}
+
+}
+
+
+
+/* SCROLL ANIMATION */
+
+.reveal{
+
+opacity:0;
+transform:translateY(40px);
+transition:0.8s;
+
+}
+
+.reveal.active{
+
+opacity:1;
+transform:translateY(0);
+
+}
+
+
+
+/* ENTRY */
+
+@keyframes fadeUp{
+
+from{
+
+opacity:0;
+transform:translateY(40px);
+
+}
+
+to{
+
+opacity:1;
+transform:translateY(0);
+
+}
+
+}
+
+
+
+@media(max-width:500px){
+
+.dashboard-container{
+
+width:90%;
+
+}
+
+.navbar{
+
+padding:15px;
+
+}
+
+}
+
+</style>
+
+</head>
+
+
+
+<body>
+
+
+<!-- PARTICLE CANVAS -->
+
+<canvas id="particles"></canvas>
+
+
+
+<!-- NAVBAR -->
+
+<div class="navbar">
+
+<div class="logo">
+Symptom AI
+</div>
+
+<div class="nav-links">
+
+<a href="#">Home</a>
+<a href="#">Calculator</a>
+<a href="#">Profile</a>
+
+</div>
+
+</div>
+
+
+
+<!-- FLOATING GRAPHICS -->
+
+<div class="shape s1"></div>
+<div class="shape s2"></div>
+
+
+
+<!-- MAIN -->
+
+<div class="main">
+
+<div class="dashboard-container reveal">
+
+<h1 id="welcome-message">
+Loading...
+</h1>
+
+<p>
+Welcome to symptom calculator
+</p>
+
+<button class="logout-btn" id="logout-btn">
+
+Enter
+
+</button>
+
+</div>
+
+</div>
+
+
+
+<script>
+
+
+/* LOGIN CHECK */
+
+window.onload=function(){
+
+const user=sessionStorage.getItem("activeUser");
+
+if(!user){
+
+alert("login first");
+
+window.location.href="index.html";
+
+}
+
+else{
+
+document.getElementById("welcome-message").innerText="Welcome, "+user;
+
+}
+
+};
+
+
+
+/* BUTTON */
+
+document.getElementById("logout-btn").onclick=function(){
+
+sessionStorage.removeItem("activeUser");
+
+window.location.href="index.html";
+
+};
+
+
+
+/* SCROLL REVEAL */
+
+const observer=new IntersectionObserver(entries=>{
+
+entries.forEach(entry=>{
+
+if(entry.isIntersecting){
+
+entry.target.classList.add("active");
+
+}
+
+});
+
+});
+
+document.querySelectorAll(".reveal").forEach(el=>observer.observe(el));
+
+
+
+/* PARTICLES */
+
+const canvas=document.getElementById("particles");
+
+const ctx=canvas.getContext("2d");
+
+canvas.width=window.innerWidth;
+
+canvas.height=window.innerHeight;
+
+
+let particles=[];
+
+for(let i=0;i<70;i++){
+
+particles.push({
+
+x:Math.random()*canvas.width,
+
+y:Math.random()*canvas.height,
+
+r:Math.random()*2,
+
+dx:(Math.random()-0.5)*0.5,
+
+dy:(Math.random()-0.5)*0.5
+
+});
+
+}
+
+
+function animate(){
+
+ctx.clearRect(0,0,canvas.width,canvas.height);
+
+particles.forEach(p=>{
+
+ctx.beginPath();
+
+ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+
+ctx.fillStyle="#007bff";
+
+ctx.fill();
+
+p.x+=p.dx;
+
+p.y+=p.dy;
+
+});
+
+requestAnimationFrame(animate);
+
+}
+
+animate();
+
+
+</script>
+
+
+</body>
+
+</html>

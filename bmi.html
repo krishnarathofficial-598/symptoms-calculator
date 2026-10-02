@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BMI Calculator | kpsTech Calc</title>
+
+    <style>
+        /* --- SHARED VARIABLES & GLOBAL CSS --- */
+        :root {
+            --primary-color: #0ea5e9;
+            --primary-hover: #0284c7;
+            --secondary-color: #38bdf8;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+        }
+
+        /* --- NAVBAR --- */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 40px;
+            background: #1e293b;
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-logo {
+            font-size: 22px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: white;
+            padding: 10px 15px;
+            display: block;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover {
+            background: var(--primary-color);
+            border-radius: 4px;
+        }
+
+        /* --- MAIN APP WRAPPER --- */
+        .main-wrapper {
+            display: flex;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .app-container {
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1.app-title {
+            margin: 0;
+            font-size: 2.2rem;
+            color: var(--text-main);
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            margin-top: 5px;
+            font-size: 1.1rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            margin-bottom: 24px;
+            border: 1px solid var(--border-color);
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            color: var(--text-muted);
+            font-size: 15px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            background: #f1f5f9;
+            color: var(--text-main);
+            font-size: 16px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input[type="number"]:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2);
+        }
+
+        .calculate-btn {
+            width: 100%;
+            padding: 18px;
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: white;
+            background-color: var(--primary-color);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+            margin-top: 10px;
+        }
+
+        .calculate-btn:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(14, 165, 233, 0.4);
+        }
+
+        /* --- RESULT CARD --- */
+        #bmi-result-card {
+            display: none;
+            text-align: center;
+            border: 2px solid var(--primary-color);
+        }
+
+        .bmi-value {
+            font-size: 3.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 10px 0;
+        }
+
+        .bmi-category {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .bmi-scale {
+            display: flex;
+            justify-content: space-between;
+            background: #f1f5f9;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 20px;
+        }
+        
+        .scale-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-logo">kpsTech Calc</div>
+        <ul class="nav-links">
+            <li><a href="home.html">Home</a></li>
+            <li><a href="index.html">Dashboard</a></li>
+            <li class="dropdown">
+                <a href="#">Tools ▼</a>
+                <ul class="dropdown-menu">
+                    <li><a href="index.html">Symptoms Checker</a></li>
+                    <li><a href="bmi.html">BMI Calculator</a></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+
+    <div class="main-wrapper">
+        <div class="app-container">
+
+            <div class="header">
+                <h1 class="app-title">BMI Calculator</h1>
+                <p class="subtitle">Check your Body Mass Index to assess your weight category.</p>
+            </div>
+
+            <div class="card">
+                
+                <div style="background: #e0f2fe; padding: 15px; border-radius: 10px; margin-bottom: 25px; border: 1px dashed var(--primary-color);">
+                    <label style="font-size: 14px; color: var(--primary-hover); font-weight: bold; margin-bottom: 10px; display: block;">
+                        Don't know your height in cm? Convert it here:
+                    </label>
+                    <div style="display: flex; gap: 10px; margin-bottom: 12px;">
+                        <input type="number" id="feet-input" placeholder="Feet" style="padding: 10px; width: 50%; border: 1px solid var(--border-color); border-radius: 8px; background: white;">
+                        <input type="number" id="inch-input" placeholder="Inches" style="padding: 10px; width: 50%; border: 1px solid var(--border-color); border-radius: 8px; background: white;">
+                    </div>
+                    <button type="button" onclick="convertToCm()" style="padding: 10px 15px; background: var(--primary-color); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: bold; width: 100%; transition: 0.2s;">
+                        Convert & Auto-Fill
+                    </button>
+                </div>
+
+                <div class="input-group">
+                    <label for="height">Height (in cm)</label>
+                    <input type="number" id="height" placeholder="e.g., 170" required>
+                </div>
+                
+                <div class="input-group">
+                    <label for="weight">Weight (in kg)</label>
+                    <input type="number" id="weight" placeholder="e.g., 65" required>
+                </div>
+
+                <button class="calculate-btn" onclick="calculateBMI()">Calculate BMI</button>
+            </div>
+
+            <div id="bmi-result-card" class="card">
+                <h2>Your Result</h2>
+                <div class="bmi-value" id="bmi-score">--</div>
+                <div class="bmi-category" id="bmi-text">--</div>
+                
+                <p style="color: var(--text-muted); font-size: 0.95rem;">
+                    Body Mass Index is a simple calculation using a person's height and weight. The formula is BMI = kg/m².
+                </p>
+
+                <div class="bmi-scale">
+                    <div class="scale-item"><span style="color: #38bdf8; font-weight: bold;">< 18.5</span>Underweight</div>
+                    <div class="scale-item"><span style="color: #10b981; font-weight: bold;">18.5 - 24.9</span>Normal</div>
+                    <div class="scale-item"><span style="color: #f59e0b; font-weight: bold;">25.0 - 29.9</span>Overweight</div>
+                    <div class="scale-item"><span style="color: #ef4444; font-weight: bold;">≥ 30.0</span>Obese</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        // --- FEET TO CM LOGIC ---
+        function convertToCm() {
+            // Grab the numbers (defaults to 0 if left blank)
+            let f = parseInt(document.getElementById('feet-input').value) || 0;
+            let i = parseInt(document.getElementById('inch-input').value) || 0;
+
+            // Convert to inches, then to cm
+            let totalInches = (f * 12) + i;
+            let finalCm = totalInches * 2.54;
+
+            // Auto-fill the height input and round the number
+            if (finalCm > 0) {
+                document.getElementById('height').value = Math.round(finalCm);
+            } else {
+                alert("Please enter a valid height in feet and inches.");
+            }
+        }
+
+        // --- MAIN BMI LOGIC ---
+        function calculateBMI() {
+            // Get values from inputs
+            const heightCm = parseFloat(document.getElementById('height').value);
+            const weightKg = parseFloat(document.getElementById('weight').value);
+
+            // Validation to ensure numbers are entered
+            if (isNaN(heightCm) || isNaN(weightKg) || heightCm <= 0 || weightKg <= 0) {
+                alert("Please enter valid positive numbers for both height and weight.");
+                return;
+            }
+
+            // Convert height to meters and calculate
+            const heightM = heightCm / 100;
+            const bmi = (weightKg / (heightM * heightM)).toFixed(1);
+
+            // Determine the category and color
+            let category = "";
+            let color = "";
+
+            if (bmi < 18.5) {
+                category = "Underweight";
+                color = "#38bdf8"; // Blue
+            } else if (bmi >= 18.5 && bmi <= 24.9) {
+                category = "Normal Weight";
+                color = "#10b981"; // Green
+            } else if (bmi >= 25 && bmi <= 29.9) {
+                category = "Overweight";
+                color = "#f59e0b"; // Orange
+            } else {
+                category = "Obese";
+                color = "#ef4444"; // Red
+            }
+
+            // Update the UI
+            const resultCard = document.getElementById('bmi-result-card');
+            const scoreDisplay = document.getElementById('bmi-score');
+            const textDisplay = document.getElementById('bmi-text');
+
+            scoreDisplay.innerText = bmi;
+            scoreDisplay.style.color = color;
+            
+            textDisplay.innerText = category;
+            textDisplay.style.color = color;
+
+            resultCard.style.border = `2px solid ${color}`;
+            resultCard.style.display = "block";
+
+            // Scroll down to result
+            resultCard.scrollIntoView({ behavior: "smooth" });
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Symptoms Calculator</title>
+
+    <style>
+        /* --- GLOBAL & VARIABLES --- */
+        :root {
+            --primary-color: #0ea5e9;
+            --primary-hover: #0284c7;
+            --secondary-color: #38bdf8;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            
+            /* Age Calc Variables */
+            --glass-bg: rgba(255, 255, 255, 0.9);
+            --glass-border: rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            /* Removed overflow: hidden so the page can scroll! */
+        }
+
+        /* --- NAVBAR CSS --- */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 40px;
+            background: #1e293b; /* Dark slate to match medical blue */
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-logo {
+            font-size: 22px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+        }
+
+        .nav-links li {
+            position: relative;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: white;
+            padding: 10px 15px;
+            display: block;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover {
+            background: var(--primary-color);
+            border-radius: 4px;
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            background: #334155;
+            top: 40px;
+            min-width: 150px;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
+
+        .menu-toggle {
+            display: none;
+            font-size: 26px;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                background: #1e293b;
+                position: absolute;
+                top: 60px;
+                left: 0;
+            }
+            .nav-links li {
+                text-align: center;
+            }
+            .menu-toggle {
+                display: block;
+            }
+            .nav-links.active {
+                display: flex;
+            }
+            .dropdown-menu {
+                position: static;
+                background: #0f172a;
+            }
+        }
+
+        /* --- APP LAYOUT --- */
+        .main-wrapper {
+            display: flex;
+            justify-content: center;
+            padding: 30px 20px;
+        }
+
+        .app-container {
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        h1.app-title {
+            margin: 0;
+            font-size: 2.2rem;
+            color: var(--text-main);
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            margin-top: 5px;
+            font-size: 1.1rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            margin-bottom: 24px;
+            border: 1px solid var(--border-color);
+        }
+
+        .card h2 {
+            margin-top: 0;
+            font-size: 1.3rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 12px;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+
+        /* --- AGE CALCULATOR CSS --- */
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            color: var(--text-muted);
+            font-size: 14px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        input[type="date"] {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            background: #f1f5f9;
+            color: var(--text-main);
+            font-size: 16px;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input[type="date"]:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.2);
+        }
+
+        .age-btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .age-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(14, 165, 233, 0.3);
+        }
+
+        .result-box {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+            gap: 15px;
+        }
+
+        .result-card {
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            padding: 15px 10px;
+            border-radius: 12px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .number {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .label {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        /* --- SYMPTOMS GRID CSS --- */
+        .symptom-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 12px;
+        }
+
+        .symptom-box {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            background: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+            user-select: none;
+        }
+
+        .symptom-box:hover {
+            border-color: var(--primary-color);
+            background: #e0f2fe;
+        }
+
+        .symptom-box input[type="checkbox"] {
+            margin-right: 12px;
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary-color);
+            cursor: pointer;
+        }
+
+        .symptom-box:has(input:checked) {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        /* --- MAIN SUBMIT BUTTON --- */
+        .calculate-btn {
+            width: 100%;
+            padding: 18px;
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: white;
+            background-color: var(--primary-color);
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+            margin-bottom: 40px;
+        }
+
+        .calculate-btn:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(14, 165, 233, 0.4);
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-logo">kptech medlife</div>
+        <ul class="nav-links">
+            <li><a href="home.html">Home</a></li> 
+            <li><a href="index.html">Dashboard</a></li>
+            <li class="dropdown">
+                <a href="#">Tools ▼</a>
+                <ul class="dropdown-menu">
+                    <li><a href="index.html">Symptoms Checker</a></li>
+                    <li><a href="bmi.html">BMI Calculator</a></li>
+                </ul>
+            </li>
+            <li><a href="login.html">Logout</a></li>
+        </ul>
+        <div class="menu-toggle" id="mobile-menu">&#9776;</div>
+    </nav>
+
+    <div class="main-wrapper">
+        <div class="app-container">
+
+            <div class="header">
+                <h1 class="app-title">Symptoms Calculator</h1>
+                <p class="subtitle">Enter your details and select symptoms for analysis.</p>
+            </div>
+
+            <div class="card" id="age-calculator-section">
+                <h2>Patient Age</h2>
+                
+                <div class="input-group">
+                    <label for="date-input">Select Patient Birth Date</label>
+                    <input type="date" id="date-input">
+                </div>
+
+                <button class="age-btn" id="calculateBtn">Calculate Age</button>
+
+                <div class="result-box">
+                    <div class="result-card">
+                        <span id="years" class="number">--</span>
+                        <span class="label">Years</span>
+                    </div>
+                    <div class="result-card">
+                        <span id="months" class="number">--</span>
+                        <span class="label">Months</span>
+                    </div>
+                    <div class="result-card">
+                        <span id="days" class="number">--</span>
+                        <span class="label">Days</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2>Select Symptoms</h2>
+                <div class="symptom-container">
+                    <label class="symptom-box"><input type="checkbox" value="fever">Fever</label>
+                    <label class="symptom-box"><input type="checkbox" value="cough">Cough</label>
+                    <label class="symptom-box"><input type="checkbox" value="fatigue">Fatigue</label>
+                    <label class="symptom-box"><input type="checkbox" value="headache">Headache</label>
+                    <label class="symptom-box"><input type="checkbox" value="chills">Chills</label>
+                    <label class="symptom-box"><input type="checkbox" value="sweating">Sweating</label>
+                    <label class="symptom-box"><input type="checkbox" value="weakness">Weakness</label>
+                    <label class="symptom-box"><input type="checkbox" value="dizziness">Dizziness</label>
+                    <label class="symptom-box"><input type="checkbox" value="nausea">Nausea</label>
+                    <label class="symptom-box"><input type="checkbox" value="vomiting">Vomiting</label>
+                    <label class="symptom-box"><input type="checkbox" value="diarrhea">Diarrhea</label>
+                    <label class="symptom-box"><input type="checkbox" value="constipation">Constipation</label>
+                    <label class="symptom-box"><input type="checkbox" value="stomach_pain">Stomach pain</label>
+                    <label class="symptom-box"><input type="checkbox" value="acidity">Acidity</label>
+                    <label class="symptom-box"><input type="checkbox" value="bloating">Bloating</label>
+                    <label class="symptom-box"><input type="checkbox" value="gas">Gas</label>
+                    <label class="symptom-box"><input type="checkbox" value="runny_nose">Runny nose</label>
+                    <label class="symptom-box"><input type="checkbox" value="sore_throat">Sore throat</label>
+                    <label class="symptom-box"><input type="checkbox" value="cold">Cold</label>
+                    <label class="symptom-box"><input type="checkbox" value="flu">Flu</label>
+                    <label class="symptom-box"><input type="checkbox" value="loss_smell">Loss of smell</label>
+                    <label class="symptom-box"><input type="checkbox" value="loss_taste">Loss of taste</label>
+                    <label class="symptom-box"><input type="checkbox" value="chest_pain">Chest pain</label>
+                    <label class="symptom-box"><input type="checkbox" value="breath_shortness">Short breath</label>
+                    <label class="symptom-box"><input type="checkbox" value="palpitations">Palpitations</label>
+                    <label class="symptom-box"><input type="checkbox" value="high_bp">High BP</label>
+                    <label class="symptom-box"><input type="checkbox" value="low_bp">Low BP</label>
+                    <label class="symptom-box"><input type="checkbox" value="joint_pain">Joint pain</label>
+                    <label class="symptom-box"><input type="checkbox" value="muscle_pain">Muscle pain</label>
+                    <label class="symptom-box"><input type="checkbox" value="body_pain">Body pain</label>
+                    <label class="symptom-box"><input type="checkbox" value="back_pain">Back pain</label>
+                    <label class="symptom-box"><input type="checkbox" value="neck_pain">Neck pain</label>
+                    <label class="symptom-box"><input type="checkbox" value="knee_pain">Knee pain</label>
+                    <label class="symptom-box"><input type="checkbox" value="shoulder_pain">Shoulder pain</label>
+                    <label class="symptom-box"><input type="checkbox" value="itching">Itching</label>
+                    <label class="symptom-box"><input type="checkbox" value="rash">Skin rash</label>
+                    <label class="symptom-box"><input type="checkbox" value="dry_skin">Dry skin</label>
+                    <label class="symptom-box"><input type="checkbox" value="hair_loss">Hair loss</label>
+                    <label class="symptom-box"><input type="checkbox" value="blurred_vision">Blurred vision</label>
+                    <label class="symptom-box"><input type="checkbox" value="eye_pain">Eye pain</label>
+                    <label class="symptom-box"><input type="checkbox" value="eye_redness">Eye redness</label>
+                    <label class="symptom-box"><input type="checkbox" value="ear_pain">Ear pain</label>
+                    <label class="symptom-box"><input type="checkbox" value="hearing_loss">Hearing loss</label>
+                    <label class="symptom-box"><input type="checkbox" value="anxiety">Anxiety</label>
+                    <label class="symptom-box"><input type="checkbox" value="depression">Depression</label>
+                    <label class="symptom-box"><input type="checkbox" value="insomnia">Insomnia</label>
+                    <label class="symptom-box"><input type="checkbox" value="stress">Stress</label>
+                    <label class="symptom-box"><input type="checkbox" value="memory_loss">Memory loss</label>
+                    <label class="symptom-box"><input type="checkbox" value="confusion">Confusion</label>
+                    <label class="symptom-box"><input type="checkbox" value="weight_loss">Weight loss</label>
+                    <label class="symptom-box"><input type="checkbox" value="weight_gain">Weight gain</label>
+                    <label class="symptom-box"><input type="checkbox" value="frequent_urination">Frequent urination</label>
+                    <label class="symptom-box"><input type="checkbox" value="burning_urination">Burning urination</label>
+                    <label class="symptom-box"><input type="checkbox" value="pelvic_pain">Pelvic pain</label>
+                    <label class="symptom-box"><input type="checkbox" value="swelling">Swelling</label>
+                    <label class="symptom-box"><input type="checkbox" value="inflammation">Inflammation</label>
+                    <label class="symptom-box"><input type="checkbox" value="dry_mouth">Dry mouth</label>
+                    <label class="symptom-box"><input type="checkbox" value="bad_breath">Bad breath</label>
+                    <label class="symptom-box"><input type="checkbox" value="tooth_pain">Tooth pain</label>
+                    <label class="symptom-box"><input type="checkbox" value="bleeding_gums">Bleeding gums</label>
+                    <label class="symptom-box"><input type="checkbox" value="snoring">Snoring</label>
+                    <label class="symptom-box"><input type="checkbox" value="sleep_apnea">Sleep apnea</label>
+                    <label class="symptom-box"><input type="checkbox" value="tremor">Tremor</label>
+                    <label class="symptom-box"><input type="checkbox" value="numbness">Numbness</label>
+                    <label class="symptom-box"><input type="checkbox" value="tingling">Tingling</label>
+                    <label class="symptom-box"><input type="checkbox" value="paralysis">Paralysis</label>
+                    <label class="symptom-box"><input type="checkbox" value="loss_balance">Loss of balance</label>
+                    <label class="symptom-box"><input type="checkbox" value="hallucination">Hallucination</label>
+                    <label class="symptom-box"><input type="checkbox" value="panic_attack">Panic attack</label>
+                    <label class="symptom-box"><input type="checkbox" value="restlessness">Restlessness</label>
+                    <label class="symptom-box"><input type="checkbox" value="excess_sleep">Excess sleep</label>
+                    <label class="symptom-box"><input type="checkbox" value="dehydration">Dehydration</label>
+                    <label class="symptom-box"><input type="checkbox" value="jaundice">Jaundice</label>
+                    <label class="symptom-box"><input type="checkbox" value="liver_pain">Liver pain</label>
+                    <label class="symptom-box"><input type="checkbox" value="kidney_pain">Kidney pain</label>
+                    <label class="symptom-box"><input type="checkbox" value="flank_pain">Flank pain</label>
+                    <label class="symptom-box"><input type="checkbox" value="groin_pain">Groin pain</label>
+                    <label class="symptom-box"><input type="checkbox" value="breast_pain">Breast pain</label>
+                    <label class="symptom-box"><input type="checkbox" value="menstrual_irregularity">Menstrual irregularity</label>
+                    <label class="symptom-box"><input type="checkbox" value="heavy_bleeding">Heavy bleeding</label>
+                </div>
+            </div>
+
+           <button class="calculate-btn" onclick="calculateDisease()">Analyze Symptoms & Predict Disease</button>
+
+            <div id="result-card" class="card" style="display: none; text-align: center; margin-top: 20px; border: 2px solid var(--primary-color);">
+                <h2>Possible Condition</h2>
+                <h1 id="disease-name" style="font-size: 2.5rem; margin: 15px 0;">--</h1>
+                
+                <div style="background: #e0f2fe; padding: 15px; border-radius: 10px; margin-bottom: 15px; text-align: left;">
+                    <h3 style="color: var(--primary-hover); margin-top: 0; font-size: 1.1rem;">💊 Recommended Action / OTC Relief:</h3>
+                    <p id="medicine-name" style="font-size: 1.05rem; color: var(--text-main); margin-bottom: 0;">--</p>
+                </div>
+
+                <p id="medical-disclaimer" style="color: var(--text-muted); font-size: 0.9rem;">
+                    *Disclaimer: This tool is for educational purposes. These are general OTC suggestions, not a medical prescription. Always consult a doctor.*
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 1. Mobile Navbar Toggle
+        const mobileMenu = document.getElementById('mobile-menu');
+        const navLinks = document.querySelector('.nav-links');
+
+        mobileMenu.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+
+        // 2. Age Calculator Logic
+        document.getElementById('calculateBtn').addEventListener('click', function() {
+            const dateInput = document.getElementById('date-input').value;
+            
+            if (!dateInput) {
+                alert("Please select a birth date first!");
+                return;
+            }
+
+            const birthDate = new Date(dateInput);
+            const today = new Date();
+
+            let years = today.getFullYear() - birthDate.getFullYear();
+            let months = today.getMonth() - birthDate.getMonth();
+            let days = today.getDate() - birthDate.getDate();
+
+            if (days < 0) {
+                months--;
+                // Get days in the previous month
+                const lastMonth = new Date(today.getFullYear(), today.getMonth(), 0);
+                days += lastMonth.getDate();
+            }
+
+            if (months < 0) {
+                years--;
+                months += 12;
+            }
+
+            // Update the UI with a cool counting animation effect (optional, but looks nice)
+            document.getElementById('years').innerText = years;
+            document.getElementById('months').innerText = months;
+            document.getElementById('days').innerText = days;
+        });
+
+        // 3. Placeholder for your Disease Calculator Logic
+        
+    </script>
+
+    <script src="calculator.js"></script>
+
+</body>
+</html>

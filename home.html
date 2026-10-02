@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home | kpTech Calc</title>
+
+    <style>
+        /* Shared variables from your main app */
+        :root {
+            --primary-color: #0ea5e9;
+            --primary-hover: #0284c7;
+            --secondary-color: #38bdf8;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+        }
+
+        /* NAVBAR (Identical to your main app) */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 40px;
+            background: #1e293b;
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-logo {
+            font-size: 22px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: white;
+            padding: 10px 15px;
+            display: block;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover {
+            background: var(--primary-color);
+            border-radius: 4px;
+        }
+
+        /* HERO SECTION */
+        .hero-container {
+            max-width: 900px;
+            margin: 60px auto;
+            padding: 40px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+
+        .hero-container h1 {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .hero-container h1 span {
+            color: var(--text-main);
+        }
+
+        .mission-text {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            line-height: 1.8;
+            margin-bottom: 30px;
+            padding: 0 20px;
+        }
+
+        .highlight-box {
+            background: #e0f2fe;
+            border-left: 5px solid var(--primary-color);
+            padding: 20px;
+            margin: 30px 0;
+            text-align: left;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .highlight-box h3 {
+            color: var(--primary-hover);
+            margin-bottom: 10px;
+        }
+
+        .highlight-box p {
+            color: var(--text-main);
+            line-height: 1.6;
+        }
+
+        .cta-btn {
+            display: inline-block;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: white;
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            border-radius: 30px;
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(14, 165, 233, 0.4);
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="nav-logo">kpTech Calc</div>
+        <ul class="nav-links">
+            <li><a href="home.html">Home</a></li>
+            <li><a href="index.html">Dashboard</a></li>
+            <li><a href="index.html">Symptoms Checker</a></li>
+        </ul>
+    </nav>
+
+    <div class="hero-container">
+        <h1>Welcome to <span>kpTech Calc</span></h1>
+        
+        <p class="mission-text">
+            Bridging the gap between sudden symptoms and accessible healthcare information. We built this platform to empower individuals to make informed decisions about their health quickly and securely.
+        </p>
+
+        <div class="highlight-box">
+            <h3>Our Mission</h3>
+            <p>
+                Developed as a live symptoms calculator and disease predictor, this tool was engineered to provide instant, algorithmic analysis of common medical symptoms. Proudly built by a students of KCC Institute,("krishna prasad rath") and ("abhishek mishra") and ("vedant chauhan") this hackathon project demonstrates how clean code and logic can provide immediate value by suggesting over-the-counter remedies and identifying when it is time to consult a medical professional.
+            </p>
+        </div>
+
+        <a href="index.html" class="cta-btn">Launch Calculator</a>
+    </div>
+
+</body>
+</html>
