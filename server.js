@@ -1,5 +1,6 @@
 const express = require('express');
 const fs = require('fs');
+const crypto = require('crypto');
 const cors = require('cors');
 
 const app = express();
@@ -13,6 +14,17 @@ app.get('/health', (req, res) => {
 });
 
 const FILE_PATH = './users.json';
+
+const hashPassword = (password, salt = crypto.randomBytes(16).toString('hex')) => ({
+    salt,
+    hash: crypto.scryptSync(password, salt, 64).toString('hex')
+});
+
+const verifyPassword = (password, stored) => {
+    if (!stored || typeof stored !== 'object' || !stored.salt || !stored.hash) return false;
+    const candidate = crypto.scryptSync(password, stored.salt, 64).toString('hex');
+    return crypto.timingSafeEqual(Buffer.from(candidate, 'hex'), Buffer.from(stored.hash, 'hex'));
+};
 
 // Helper function to safely read the JSON file
 const readUsers = () => {
@@ -38,7 +50,7 @@ app.post('/register', (req, res) => {
         return res.status(400).json({ message: "Username already exists" });
     }
 
-    users[username] = password;
+    users[username] = hashPassword(password);
     fs.writeFileSync(FILE_PATH, JSON.stringify(users, null, 4));
     res.status(201).json({ message: "User registered successfully" });
 });
@@ -49,7 +61,7 @@ app.post('/login', (req, res) => {
     const { username, password } = req.body;
     const users = readUsers();
 
-    if (users[username] && users[username] === password) {
+    if (verifyPassword(password, users[username])) {
         res.status(200).json({ message: "Login successful" });
     } else {
         res.status(401).json({ message: "Invalid credentials" });
